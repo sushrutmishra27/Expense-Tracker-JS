@@ -23,6 +23,7 @@ body{
     padding: 3%;
     padding-left: 5%;
     padding-right: 5%;
+    margin-bottom: 20px;
 }
 
 .secondTitle{
@@ -82,4 +83,198 @@ button{
 a{
     text-decoration: underline;
     cursor: pointer;
+}
+
+/* Chart styles */
+.charts-container {
+    margin-top: 20px;
+}
+
+.chart-area {
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 15px;
+    margin-top: 15px;
+    height: 300px;
+}
+
+.chart-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.chart-tab {
+    width: auto;
+    padding: 8px 15px;
+    margin: 0;
+    background-color: #042159;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.9em;
+    transition: background-color 0.3s;
+}
+
+.chart-tab.active {
+    background-color: #04BF8A;
+}
+
+.deleteButton {
+    color: #ff6b6b;
+}
+
+/* Budget Management Styles */
+.budget-container {
+    margin-top: 20px;
+}
+
+.budget-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.budget-form .formLine {
+    margin-right: 15px;
+}
+
+.budget-summary {
+    margin-top: 20px;
+}
+
+.budget-summary h4 {
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.budget-progress {
+    margin: 15px 0;
+    background-color: #042159;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.budget-progress-bar {
+    height: 20px;
+    background-color: #04BF8A;
+    text-align: center;
+    line-height: 20px;
+    color: white;
+    transition: width 0.3s ease;
+}
+
+.budget-progress-bar.warning {
+    background-color: #ffc107;
+}
+
+.budget-progress-bar.danger {
+    background-color: #ff6b6b;
+}
+
+.budget-info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+    font-size: 0.9em;
+}
+
+.budget-alert {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #ff6b6b;
+    color: white;
+    display: none;
+}
+
+/* Filter Styles */
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #042159;
+    border-radius: 5px;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+}
+
+.filter-group label {
+    margin-right: 5px;
+}
+
+.filter-btn {
+    width: auto;
+    padding: 5px 10px;
+    margin: 0;
+    font-size: 0.9em;
+}
+
+#resetFiltersBtn {
+    background-color: #6c757d;
+}
+
+/* Budget Item Styles */
+.budget-item {
+    background-color: #042159;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.budget-item-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.budget-item-title {
+    font-weight: bold;
+}
+
+.budget-item-amount {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9em;
+    margin-bottom: 5px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .content {
+        width: 90%;
+        padding: 5%;
+    }
+    
+    .left, .right {
+        float: none;
+        margin-right: 0;
+    }
+    
+    .formLine {
+        display: flex;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    input, select {
+        flex-grow: 1;
+    }
+    
+    .chart-tabs {
+        flex-direction: column;
+    }
+    
+    .filters {
+        flex-direction: column;
+    }
 }
