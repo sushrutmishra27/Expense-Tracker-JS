@@ -11,6 +11,8 @@
     <link href="https://fonts.googleapis.com/css?family=Titillium+Web&display=swap" 
         rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <!-- Add Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <header>
@@ -22,8 +24,23 @@
         <div class="form">
             <form id="expForm">
                 <div class="formLine left">
-                    <span for="type">Type:</span>
-                    <select id="type">
+                    <span for="category">Category:</span>
+                    <select id="category">
+                        <option value="chooseOne">Choose one...</option>
+                        <!-- Categories will be populated by JavaScript -->
+                    </select>
+                </div>
+                <div class="formLine right">
+                    <span for="subcategory">Subcategory:</span>
+                    <select id="subcategory">
+                        <option value="chooseOne">Select category first...</option>
+                        <!-- Subcategories will be populated by JavaScript -->
+                    </select>
+                </div>
+
+                <div class="formLine left">
+                    <span for="paymentType">Payment Method:</span>
+                    <select id="paymentType">
                         <option value="chooseOne">Choose one...</option>
                         <option value="Card">Card</option>
                         <option value="Cash">Cash</option>
@@ -45,15 +62,90 @@
                     <input type="text" id="amount">
                     
                 </div>
+                    <!-- inside <form id="expForm">, before the Add button -->
+                    <div class="formLine left">
+                        <label for="recurring">
+                        <input type="checkbox" id="recurring" />
+                        Recurring?
+                        </label>
+                    </div>
+                    <div class="formLine right">
+                        <label for="recurrence">
+                        Frequency:
+                        <select id="recurrence" disabled>
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                        </select>
+                        </label>
+                    </div>
                 <button type="submit" class="buttonSave">Add a new expense</button>
             </form>
         </div>
     </section>
+
+    <!-- Add Charts Section -->
+    <section class="content charts-container">
+        <h3 class="secondTitle">Expense Analytics</h3>
+        <div class="chart-tabs">
+            <button id="categoryChartBtn" class="chart-tab active">By Category</button>
+            <button id="dateChartBtn" class="chart-tab">By Date</button>
+            <button id="paymentChartBtn" class="chart-tab">By Payment Method</button>
+        </div>
+        <div class="chart-area">
+            <canvas id="expenseChart"></canvas>
+        </div>
+    </section>
+
+    <!-- Budget Management Section -->
+    <section class="content budget-container">
+        <h3 class="secondTitle">Budget Management</h3>
+        <div class="budget-form">
+            <div class="formLine">
+                <span for="budgetCategory">Category:</span>
+                <select id="budgetCategory">
+                    <!-- Categories will be populated by JavaScript -->
+                </select>
+            </div>
+            <div class="formLine">
+                <span for="budgetAmount">Monthly Budget:</span>
+                <input type="number" id="budgetAmount" min="1" step="0.01">
+            </div>
+            <button id="setBudgetBtn" class="buttonSave">Set Budget</button>
+        </div>
+        <div class="budget-summary">
+            <h4>Budget Overview</h4>
+            <div id="budgetOverview"></div>
+        </div>
+    </section>
+
+    <!-- Expense Table with Filters -->
     <section class="content">
+        <h3 class="secondTitle">Expense List</h3>
+        <div class="filters">
+            <div class="filter-group">
+                <label for="filterCategory">Category:</label>
+                <select id="filterCategory">
+                    <option value="all">All Categories</option>
+                    <!-- Categories will be populated by JavaScript -->
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="filterMonth">Month:</label>
+                <select id="filterMonth">
+                    <option value="all">All Months</option>
+                    <!-- Months will be populated by JavaScript -->
+                </select>
+            </div>
+            <button id="applyFiltersBtn" class="filter-btn">Apply Filters</button>
+            <button id="resetFiltersBtn" class="filter-btn">Reset</button>
+        </div>
         <table class="table">
             <thead>
                 <tr>
-                    <th>Type</th>
+                    <th>Category</th>
+                    <th>Subcategory</th>
+                    <th>Payment</th>
                     <th>Name</th>
                     <th>Date</th>
                     <th>Amount</th>
@@ -61,10 +153,15 @@
                 </tr>
             </thead>
             <tbody id="expenseTable">
-
+                <!-- Expenses will be populated by JavaScript -->
             </tbody>
         </table>
     </section>
+    <script>
+        document.getElementById('recurring').addEventListener('change', e => {
+          document.getElementById('recurrence').disabled = !e.target.checked;
+        });
+      </script>      
     <script src="app.js"></script>
 </body>
 </html>
