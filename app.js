@@ -99,7 +99,13 @@ let activeFilters = {
 // Initialize the page
 initializePage();
 
-// Clone past-due recurring expenses & bump their dates
+/**
+   * Processes recurring expenses that are due or past due, cloning them with updated dates and scheduling the next occurrence.
+   *
+   * For each recurring expense whose next due date is today or earlier, creates a new expense entry for the due date, updates the next due date based on the recurrence frequency, and sends a browser notification if permission is granted.
+   *
+   * @remark Updates the `expenses` array and persists changes to localStorage.
+   */
 function migrateRecurring() {
     const today = new Date().toISOString().substr(0,10);
     expenses.slice().forEach(exp => {
@@ -125,6 +131,11 @@ function migrateRecurring() {
     localStorage.setItem('expenses', JSON.stringify(expenses));
   }
   
+/**
+ * Initializes the expense tracker application UI and data.
+ *
+ * Sets up recurring expense migration, populates category and filter dropdowns, displays expenses, updates the budget overview, renders the initial chart if expenses exist, and requests browser notification permission if needed.
+ */
 function initializePage() {
     migrateRecurring(); 
     populateCategoryDropdowns();
@@ -142,6 +153,11 @@ function initializePage() {
     }
 }
 
+/**
+ * Populates the category selection dropdowns for expense entry, budget setting, and filtering with available categories.
+ *
+ * Updates the relevant dropdown elements in the UI to reflect the current set of categories defined in {@link expenseCategories}.
+ */
 function populateCategoryDropdowns() {
     const categorySelect = document.getElementById("category");
     const budgetCategorySelect = document.getElementById("budgetCategory");
@@ -175,6 +191,11 @@ function populateCategoryDropdowns() {
     });
 }
 
+/**
+ * Updates the subcategory dropdown options based on the selected main category.
+ *
+ * If a valid category is selected, populates the subcategory dropdown with its subcategories; otherwise, only a default option is shown.
+ */
 function updateSubcategories() {
     const categorySelect = document.getElementById("category");
     const subcategorySelect = document.getElementById("subcategory");
@@ -200,6 +221,11 @@ function updateSubcategories() {
     }
 }
 
+/**
+ * Populates the month filter dropdown with unique months from recorded expenses, sorted chronologically.
+ *
+ * Ensures users can filter expenses by any month present in the data.
+ */
 function populateFilterDropdowns() {
     const filterMonthSelect = document.getElementById("filterMonth");
     
@@ -230,6 +256,14 @@ function populateFilterDropdowns() {
     });
 }
 
+/**
+ * Handles the submission of a new expense, validating input fields and adding the expense to the list.
+ *
+ * If the expense is marked as recurring, calculates the next due date based on the selected frequency.
+ * Updates localStorage, refreshes the expense display, budget overview, filter options, and category chart.
+ *
+ * @param {Event} e - The form submission event.
+ */
 function addExpense(e) {
     e.preventDefault();
 
@@ -286,6 +320,11 @@ function addExpense(e) {
     }
 }
 
+/**
+ * Displays the list of expenses in the table, applying active category and month filters.
+ *
+ * If no expenses match the current filters, shows a message indicating no expenses were found.
+ */
 function showExpenses() {
     const expenseTable = document.getElementById('expenseTable');
     expenseTable.innerHTML = '';
@@ -334,6 +373,13 @@ function showExpenses() {
     }
 }
 
+/**
+ * Removes an expense by its ID and updates all related displays and data.
+ *
+ * After deletion, updates the expense list, budget overview, filter options, and category chart.
+ *
+ * @param {string|number} id - The unique identifier of the expense to remove.
+ */
 function deleteExpense(id) {
     for (let i = 0; i < expenses.length; i++) {
         if (expenses[i].id == id) {
@@ -349,6 +395,11 @@ function deleteExpense(id) {
     renderChart('category'); // Update chart after deleting expense
 }
 
+/**
+ * Applies the selected category and month filters to the expense list.
+ *
+ * Updates the active filters based on user selections and refreshes the displayed expenses accordingly.
+ */
 function applyFilters() {
     const categoryFilter = document.getElementById("filterCategory").value;
     const monthFilter = document.getElementById("filterMonth").value;
@@ -361,6 +412,11 @@ function applyFilters() {
     showExpenses();
 }
 
+/**
+ * Resets all expense filters to show every expense.
+ *
+ * Sets the category and month filters to 'all', clears active filters, and refreshes the expense display.
+ */
 function resetFilters() {
     document.getElementById("filterCategory").value = 'all';
     document.getElementById("filterMonth").value = 'all';
@@ -373,7 +429,11 @@ function resetFilters() {
     showExpenses();
 }
 
-// Function to get random colors for chart
+/**
+ * Generates a random hex color string.
+ *
+ * @returns {string} A random color in hexadecimal format (e.g., "#3E2F1B").
+ */
 function getRandomColor() {
     const letters = '0123456789ABCDEF';
     let color = '#';
@@ -383,7 +443,12 @@ function getRandomColor() {
     return color;
 }
 
-// Function to group expenses by category, date or payment method
+/**
+ * Aggregates expenses by category, payment method, or month, summing the total amount for each group.
+ *
+ * @param {string} groupBy - The grouping criterion: 'category', 'payment', or 'date'.
+ * @returns {Object} An object mapping each group (category, payment type, or month-year) to the total expense amount. For 'date', groups are sorted chronologically.
+ */
 function groupExpenses(groupBy) {
     const grouped = {};
     
@@ -430,7 +495,13 @@ function groupExpenses(groupBy) {
     return grouped;
 }
 
-// Function to render the chart
+/**
+ * Renders an expense chart based on the selected grouping type.
+ *
+ * Updates the chart display to show expenses grouped by category, payment method, or month, using a pie or bar chart as appropriate. The chart is dynamically updated with random colors and an appropriate title.
+ *
+ * @param {string} chartType - The grouping type for the chart ('category', 'payment', or 'date').
+ */
 function renderChart(chartType) {
     // Update active tab
     document.querySelectorAll('.chart-tab').forEach(tab => tab.classList.remove('active'));
@@ -493,6 +564,12 @@ function renderChart(chartType) {
     expenseChart = new Chart(ctx, chartConfig);
 }
 
+/**
+ * Returns a descriptive chart title based on the specified chart type.
+ *
+ * @param {string} chartType - The type of chart grouping ('category', 'date', or 'payment').
+ * @returns {string} The corresponding chart title.
+ */
 function getChartTitle(chartType) {
     switch(chartType) {
         case 'category':
@@ -506,7 +583,11 @@ function getChartTitle(chartType) {
     }
 }
 
-// Budget Management Functions
+/**
+ * Sets the budget amount for a selected expense category.
+ *
+ * Updates the stored budgets and refreshes the budget overview display. Alerts the user on success or if input is invalid.
+ */
 function setBudget() {
     const category = document.getElementById("budgetCategory").value;
     const amount = parseFloat(document.getElementById("budgetAmount").value);
@@ -522,6 +603,11 @@ function setBudget() {
     }
 }
 
+/**
+ * Updates the budget overview display with current month's spending and progress for each budgeted category.
+ *
+ * Shows budget amounts, spent and remaining values, progress bars, and alerts if spending exceeds 90% of a category's budget. If no budgets are set, displays a prompt to set budgets.
+ */
 function updateBudgetOverview() {
     const budgetOverview = document.getElementById("budgetOverview");
     budgetOverview.innerHTML = '';
@@ -596,6 +682,12 @@ function updateBudgetOverview() {
     });
 }
 
+/**
+ * Returns the full month name for a given zero-based month index.
+ *
+ * @param {number} monthIndex - The zero-based index of the month (0 for January, 11 for December).
+ * @returns {string} The name of the month corresponding to {@link monthIndex}.
+ */
 function getMonthName(monthIndex) {
     const months = [
         'January', 'February', 'March', 'April', 'May', 'June',
@@ -604,7 +696,11 @@ function getMonthName(monthIndex) {
     return months[monthIndex];
 }
 
-// Convert old data format to new format if needed
+/**
+ * Migrates legacy expense data to the current format with category and subcategory fields.
+ *
+ * Converts expenses lacking a `category` property to include default values and updates localStorage. Reloads the page after migration.
+ */
 function migrateOldData() {
     if (expenses.length > 0 && !expenses[0].hasOwnProperty('category')) {
         const migratedExpenses = expenses.map(expense => {
@@ -624,8 +720,12 @@ function migrateOldData() {
     }
 }
 /**
- * Return next occurrence date based on frequency.
- */
+   * Calculates the next occurrence date for a recurring event based on the specified frequency.
+   *
+   * @param {Date} dateObj - The current date of the event.
+   * @param {string} frequency - The recurrence frequency ('daily', 'weekly', or 'monthly').
+   * @returns {Date} The next occurrence date according to the given frequency.
+   */
 function computeNextDate(dateObj, frequency) {
     const next = new Date(dateObj);
     if (frequency === 'daily') {
